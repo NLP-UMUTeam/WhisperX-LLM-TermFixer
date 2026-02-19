@@ -29,14 +29,30 @@ conda create --name whisperx python=3.12
 conda activate whisperx
 ```
 
-### 2. Install PyTorch, e.g. for Linux and Windows CUDA11.8:
-
-`conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia`
+### 2. Install the library
 
 ```bash
 git clone https://github.com/NLP-UMUTeam/interspeech-2026-LexiCorrect-ASR.git
-cd whisperX
-pip install -e .
+pip install -r requirements.txt
+```
+
+### 3. CUDA / cuDNN Library Path (Optional)
+If you encounter runtime errors related to cuDNN, cuBLAS, or missing CUDA shared libraries (e.g. `libcudnn.so not found`), you may need to manually export the cuDNN library path from your conda environment:
+
+```bash
+export LD_LIBRARY_PATH=/home/XXX/miniconda3/envs/whisperx/lib/python3.12/site-packages/nvidia/cudnn/lib:$LD_LIBRARY_PATH
+```
+Replace `whisperx` with your actual conda environment name.
+
+To make this permanent, add the line to your `~/.bashrc`:
+
+```bash
+echo 'export LD_LIBRARY_PATH=/home/ronghao/miniconda3/envs/whisperx/lib/python3.12/site-packages/nvidia/cudnn/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
+```
+
+Then reload:
+```bash
+source ~/.bashrc
 ```
 
 ## Usage Examples
@@ -48,7 +64,7 @@ import torch
 # 1) Device
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # 2) Load term list (lexicon)
-df_terms = pd.read_csv("./dataset_full.csv")
+df_terms = pd.read_csv("./test/dataset/dataset_full.csv")
 term_list = df_terms["term"].astype(str).str.lower().unique().tolist()
 # 3) VAD options (example)
 vad_options = {
@@ -67,15 +83,15 @@ model = whisperx.load_model(
     lexicon_terms=term_list,
     num_hypotheses=10,
     use_lm=True,
-    deep_lm=False,
-    lm_name="/path/to/lm/",
+    deep_lm=True,
+    lm_name="/path/LM",
     lm_threshold=0.01,
     quantization="none",   # "none" | "4bit" | "8bit"
 )
 # 5) Load aligner
 align_model, metadata = whisperx.load_align_model(language_code="en", device=device)
 # 6) Transcribe
-audio_path = "examples/sample.wav"
+audio_path = "/home/ronghao/interspeech/audios_coqui/term_text_0.wav"
 result = model.transcribe(
     audio_path,
     task="transcribe",
@@ -93,8 +109,9 @@ aligned = whisperx.align(
     return_char_alignments=False,
 )
 text = " ".join(seg["text"] for seg in aligned["segments"])
-
+print(text)
 ```
+
 ### Audio Processing Note (reproducibility)
 
 Keep **consistent audio preprocessing** across: 
