@@ -40,14 +40,14 @@ pip install -r requirements.txt
 If you encounter runtime errors related to cuDNN, cuBLAS, or missing CUDA shared libraries (e.g. `libcudnn.so not found`), you may need to manually export the cuDNN library path from your conda environment:
 
 ```bash
-export LD_LIBRARY_PATH=/home/XXX/miniconda3/envs/whisperx/lib/python3.12/site-packages/nvidia/cudnn/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/home/XXXX/miniconda3/envs/whisperx/lib/python3.12/site-packages/nvidia/cudnn/lib:$LD_LIBRARY_PATH
 ```
 Replace `whisperx` with your actual conda environment name.
 
 To make this permanent, add the line to your `~/.bashrc`:
 
 ```bash
-echo 'export LD_LIBRARY_PATH=/home/ronghao/miniconda3/envs/whisperx/lib/python3.12/site-packages/nvidia/cudnn/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/home/XXXX/miniconda3/envs/whisperx/lib/python3.12/site-packages/nvidia/cudnn/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 ```
 
 Then reload:
