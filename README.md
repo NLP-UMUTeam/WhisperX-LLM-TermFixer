@@ -34,7 +34,7 @@ conda activate whisperx
 `conda install pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia`
 
 ```bash
-git https://github.com/NLP-UMUTeam/interspeech-2026-LexiCorrect-ASR.git
+git clone https://github.com/NLP-UMUTeam/interspeech-2026-LexiCorrect-ASR.git
 cd whisperX
 pip install -e .
 ```
