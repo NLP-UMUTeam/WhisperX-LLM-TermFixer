@@ -175,7 +175,7 @@ WER and term-level accuracy for Whisper models of different sizes using WhisperX
 
 ---
 
-| Configuration | Model            | WER ↓ | % Accuracy ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
+| Configuration | Model            | WER ↓ | Accuracy (%) ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
 |---------------|------------------|-------|--------------|------------|------------------|--------------------------|--------------------|
 | Baseline | Tiny           | 18.91 | 14.23 | - | - | 0.234 | 03:54 |
 | Baseline | Base           | 13.66 | 19.90 | - | - | 0.235 | 03:56 |
@@ -192,7 +192,7 @@ WER and term-level accuracy for Whisper models of different sizes using WhisperX
 
 ---
 
-| Configuration | Model | WER ↓ | % Accuracy ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
+| Configuration | Model | WER ↓ | Accuracy (%) ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
 |---------------|--------|-------|--------------|------------|------------------|--------------------------|--------------------|
 | Gemma-2-9B | Tiny           | 16.85 | 35.52 | -2.06 | +21.29 | 0.390 | 06:32 |
 | Gemma-2-9B | Base           | 11.08 | 49.85 | -2.58 | +29.95 | 0.410 | 06:52 |
@@ -207,7 +207,7 @@ WER and term-level accuracy for Whisper models of different sizes using WhisperX
 
 ---
 
-| Configuration | Model | WER ↓ | % Accuracy ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
+| Configuration | Model | WER ↓ | Accuracy (%) ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
 |---------------|--------|-------|--------------|------------|------------------|--------------------------|--------------------|
 | BioMistral-7B-dare | Tiny           | 16.80 | 36.12 | -2.11 | +21.89 | 0.381 | 06:22 |
 | BioMistral-7B-dare | Base           | 11.02 | 49.95 | -2.64 | +30.05 | 0.397 | 06:39 |
@@ -222,7 +222,7 @@ WER and term-level accuracy for Whisper models of different sizes using WhisperX
 
 ---
 
-| Configuration | Model | WER ↓ | % Accuracy ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
+| Configuration | Model | WER ↓ | Accuracy (%) ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
 |---------------|--------|-------|--------------|------------|------------------|--------------------------|--------------------|
 | LLaMA-3.2-3B | Tiny           | 16.81 | 36.12 | -2.10 | +21.89 | 0.366 | 06:07 |
 | LLaMA-3.2-3B | Base           | 11.15 | 49.45 | -2.51 | +29.55 | 0.383 | 06:24 |
