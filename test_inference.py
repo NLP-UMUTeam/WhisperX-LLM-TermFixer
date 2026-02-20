@@ -24,14 +24,16 @@ model = whisperx.load_model(
     num_hypotheses=10,
     use_lm=True,
     deep_lm=True,
-    lm_name="/PATH/LM",
+    # lm_name = meta-llama/Llama-3.2-3B
+    # lm_name = google/gemma-2-9b
+    lm_name="BioMistral/BioMistral-7B-DARE",
     lm_threshold=0.01,
     quantization="none",   # "none" | "4bit" | "8bit"
 )
 # 5) Load aligner
 align_model, metadata = whisperx.load_align_model(language_code="en", device=device)
 # 6) Transcribe
-audio_path = "/home/ronghao/interspeech/audios_coqui/term_text_0.wav"
+audio_path = "./test/audios_coqui/term_text_0.wav"
 result = model.transcribe(
     audio_path,
     task="transcribe",
