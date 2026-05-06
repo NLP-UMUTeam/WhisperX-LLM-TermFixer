@@ -3,7 +3,7 @@
 A lightweight post-decoding framework to improve specific term recognition in Whisper-based system without fine-tuning or modifying the acoustic model or ASR like Whisper. This approach extends [WhisperX](https://github.com/m-bain/whisperX) framework with N-best decoding, lexicon-guided phonetic correction, and contextual re-scoring using a Large Language Model (LLM).
 
 ## Abstract
-Large-scale end-to-end ASR models such as Whisper achieve strong general-domain performance but often fail to accurately recognize specialized terminology that is underrepresented in their training data, particularly in sensitive domains like medicine. In this paper, we propose a lightweight post-decoding framework to improve medical term recognition in Whisper-based systems without fine-tuning or modifying the acoustic model. Our approach extends WhisperX framework with N-best decoding, lexicon-guided phonetic correction, and contextual re-scoring using a Large Language Model. We evaluate the method on a controlled synthetic medical speech dataset containing 1,005 domain-specific terms. Results show consistent gains across Whisper model sizes, with term-level accuracy improvements exceeding 20 percentage points while also reducing Word Error Rate, demonstrating the effectiveness of post-decoding strategies for domain-specific ASR.
+Large-scale ASR models such as Whisper perform well in general domains but struggle with specialized terminology, particularly in sensitive domains like medicine. We propose \textit{WhisperX-LLM-TermFixer}, a lightweight post-decoding framework that improves term recognition without retraining or modifying the acoustic model. The method combines $N$-best decoding, phonetic n-gram correction, and LLM-based contextual filtering. We evaluate our approach on a multilingual synthetic dataset covering English, Spanish, Catalan, and Basque, using the same set of medical terms across languages. 
 
 ## Method Overview
 
@@ -93,7 +93,7 @@ model = whisperx.load_model(
 # 5) Load aligner
 align_model, metadata = whisperx.load_align_model(language_code="en", device=device)
 # 6) Transcribe
-audio_path = "./test/audios_coqui/term_text_0.wav"
+audio_path = "./test/audios_english_tts/term_text_0.wav"
 result = model.transcribe(
     audio_path,
     task="transcribe",
@@ -163,70 +163,57 @@ Different resampling and preprocessing pipelines can change internal logits and 
 - **Case and punctuation preservation:** original formatting is preserved during replacement.
 
 ## Experiments
-To evaluate medical term recognition under controlled conditions, we created a synthetic speech dataset containing 1,005 domain-specific medical and pharmaceutical terms (see `test` folder). 
-
-Contextualized sentences were automatically generated using Gemini and converted to speech with Coqui TTS using multiple speakers. This setup ensures consistent pronunciation and controlled lexical coverage, enabling focused analysis of term recognition independently from acoustic noise or spontaneous speech variability.
+To evaluate medical term recognition under controlled conditions, we created a synthetic speech dataset containing 1,005 domain-specific medical and pharmaceutical terms (see `test` folder) in Spanish, English, Catalan and Basque. 
 
 ### WER and Term-Level Accuracy Results
 
-WER and term-level accuracy for Whisper models of different sizes using WhisperX under a baseline configuration and the proposed post-decoding approach combining beam search, phonetic filtering, and LLM-based contextual re-scoring. Results are reported for different LLMs (Gemma-2-9B, BioMistral-7B-Dare, and LLaMA-3.2-3B), together with absolute improvements in WER (ΔWER) and term accuracy (ΔAccuracy) relative to the baseline, as well as the average inference time per segment and total processing time.
+WER and term-level accuracy for Whisper models of different sizes using WhisperX under a baseline configuration and the proposed post-decoding approach combining beam search, phonetic filtering, and LLM-based contextual re-scoring. Results are reported for best-performing LLM within each model family (Gemma, BioMistral, LLaMA, and Salamandra) for each
+Whisper model size and language. Results are reported in terms of WER and term-level accuracy (%). 
 
-#### Baseline
-
+#### English
 ---
 
-| Configuration | Model            | WER ↓ | Accuracy (%) ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
-|---------------|------------------|-------|--------------|------------|------------------|--------------------------|--------------------|
-| Baseline | Tiny           | 18.91 | 14.23 | - | - | 0.234 | 03:54 |
-| Baseline | Base           | 13.66 | 19.90 | - | - | 0.235 | 03:56 |
-| Baseline | Small          | 9.41  | 33.33 | - | - | 0.269 | 04:30 |
-| Baseline | Medium         | 6.88  | 43.28 | - | - | 0.366 | 06:07 |
-| Baseline | Large-v3-turbo | 6.50  | 44.88 | - | - | 0.282 | 04:43 |
-| Baseline | Large-v3       | 5.24  | 55.62 | - | - | 0.426 | 07:07 |
+| Whisper | Gemma WER | Gemma Acc | BioMistral WER | BioMistral Acc | LLaMA WER | LLaMA Acc | Salamandra WER | Salamandra Acc |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Tiny | 16.85 | 35.52 | 16.80 | 36.12 | 16.81 | 36.12 | **16.79** | **36.22** |
+| Base | 11.08 | 49.85 | **11.02** | **49.95** | 11.05 | 49.95 | 11.04 | 49.95 |
+| Small | 7.22 | 62.29 | 7.21 | 62.09 | 7.23 | 62.19 | **7.17** | **62.59** |
+| Medium | 4.97 | 70.55 | 4.97 | 70.55 | 4.99 | 70.45 | **4.93** | **70.95** |
+| Large-v3-turbo | 4.61 | 72.74 | 4.61 | 72.74 | 4.55 | 73.73 | **4.54** | **73.83** |
+| Large-v3 | 3.61 | 78.81 | 3.59 | 79.00 | 3.61 | 79.00 | **3.55** | **79.20** |
 
----
+#### Spanish
+--- 
 
-#### LLM-Guided Post-Decoding
+| Whisper | Gemma WER | Gemma Acc | BioMistral WER | BioMistral Acc | LLaMA WER | LLaMA Acc | Salamandra WER | Salamandra Acc |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Tiny | 14.57 | 67.06 | 14.54 | 67.06 | 14.58 | 66.87 | **14.63** | **67.16** |
+| Base | 8.77 | 77.81 | **8.72** | **77.91** | 8.75 | 77.61 | 8.73 | 77.81 |
+| Small | **4.46** | **85.97** | 4.52 | 85.47 | 4.46 | 85.87 | 4.51 | 85.67 |
+| Medium | **2.50** | **90.95** | 2.50 | 90.95 | 2.50 | 90.85 | 2.51 | 90.95 |
+| Large-v3-turbo | **1.85** | **93.63** | 1.86 | 93.23 | 1.87 | 93.33 | 1.87 | 93.23 |
+| Large-v3 | 1.81 | 93.73 | 1.79 | 93.73 | **1.81** | **93.83** | **1.81** | **93.83** |
 
-**Gemma-2-9B**
+#### Catalan
+--- 
 
----
+| Whisper | Gemma WER | Gemma Acc | BioMistral WER | BioMistral Acc | LLaMA WER | LLaMA Acc | Salamandra WER | Salamandra Acc |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Tiny | 41.78 | 30.75 | 41.79 | 30.75 | 41.75 | 31.24 | **41.71** | **31.34** |
+| Base | 27.91 | 39.30 | 28.01 | 38.91 | 27.94 | 39.20 | **27.78** | **39.80** |
+| Small | 15.66 | 50.05 | 15.62 | 49.85 | 15.63 | 50.45 | **15.51** | **50.65** |
+| Medium | 9.55 | 60.00 | 9.59 | 59.30 | **9.54** | **60.20** | 9.50 | 60.10 |
+| Large-v3-turbo | 6.85 | 64.58 | 6.95 | 63.78 | 6.83 | 65.07 | **6.80** | **65.17** |
+| Large-v3 | 6.28 | 70.05 | 6.30 | 70.05 | 6.30 | 70.15 | **6.22** | **70.35** |
 
-| Configuration | Model | WER ↓ | Accuracy (%) ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
-|---------------|--------|-------|--------------|------------|------------------|--------------------------|--------------------|
-| Gemma-2-9B | Tiny           | 16.85 | 35.52 | -2.06 | +21.29 | 0.390 | 06:32 |
-| Gemma-2-9B | Base           | 11.08 | 49.85 | -2.58 | +29.95 | 0.410 | 06:52 |
-| Gemma-2-9B | Small          | 7.22  | 62.29 | -2.19 | +28.96 | 0.544 | 09:07 |
-| Gemma-2-9B | Medium         | 4.97  | 70.55 | -1.91 | +27.27 | 0.567 | 09:29 |
-| Gemma-2-9B | Large-v3-turbo | 4.61  | 72.74 | -1.89 | +27.86 | 0.643 | 10:46 |
-| Gemma-2-9B | Large-v3       | 3.61  | 78.81 | -1.63 | +23.19 | 0.818 | 13:42 |
+#### Basque
+--- 
 
----
-
-**BioMistral-7B-dare**
-
----
-
-| Configuration | Model | WER ↓ | Accuracy (%) ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
-|---------------|--------|-------|--------------|------------|------------------|--------------------------|--------------------|
-| BioMistral-7B-dare | Tiny           | 16.80 | 36.12 | -2.11 | +21.89 | 0.381 | 06:22 |
-| BioMistral-7B-dare | Base           | 11.02 | 49.95 | -2.64 | +30.05 | 0.397 | 06:39 |
-| BioMistral-7B-dare | Small          | 7.22  | 62.09 | -2.19 | +28.76 | 0.438 | 07:19 |
-| BioMistral-7B-dare | Medium         | 4.97  | 70.55 | -1.91 | +27.27 | 0.540 | 09:02 |
-| BioMistral-7B-dare | Large-v3-turbo | 4.62  | 72.54 | -1.88 | +27.66 | 0.444 | 07:26 |
-| BioMistral-7B-dare | Large-v3       | 3.59  | 79.00 | -1.65 | +23.38 | 0.606 | 10:08 |
-
----
-
-**LLaMA-3.2-3B**
-
----
-
-| Configuration | Model | WER ↓ | Accuracy (%) ↑ | ΔWER (%) ↓ | ΔAccuracy (%) ↑ | Avg. Time / Segment (s) | Total Time (mm:ss) |
-|---------------|--------|-------|--------------|------------|------------------|--------------------------|--------------------|
-| LLaMA-3.2-3B | Tiny           | 16.81 | 36.12 | -2.10 | +21.89 | 0.366 | 06:07 |
-| LLaMA-3.2-3B | Base           | 11.15 | 49.45 | -2.51 | +29.55 | 0.383 | 06:24 |
-| LLaMA-3.2-3B | Small          | 7.24  | 61.89 | -2.17 | +28.56 | 0.422 | 07:04 |
-| LLaMA-3.2-3B | Medium         | 5.00  | 70.15 | -1.88 | +26.87 | 0.535 | 08:57 |
-| LLaMA-3.2-3B | Large-v3-turbo | 4.59  | 73.13 | -1.91 | +28.25 | 0.424 | 07:06 |
-| LLaMA-3.2-3B | Large-v3       | 3.61  | 79.00 | -1.63 | +23.38 | 0.592 | 09:54 |
+| Whisper | Gemma WER | Gemma Acc | BioMistral WER | BioMistral Acc | LLaMA WER | LLaMA Acc | Salamandra WER | Salamandra Acc |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Tiny | 94.18 | 31.64 | 94.38 | 33.03 | 94.15 | 33.33 | **93.76** | **34.93** |
+| Base | 87.72 | 36.62 | 87.80 | 39.50 | 87.63 | 40.00 | **87.32** | **41.89** |
+| Small | 67.92 | 42.69 | 68.04 | 43.88 | 67.59 | 45.87 | **67.47** | **46.27** |
+| Medium | 53.44 | 45.57 | 53.82 | 45.97 | 53.21 | 46.87 | **53.05** | **47.76** |
+| Large-v3-turbo | 32.59 | 59.40 | 33.01 | 58.81 | 32.62 | 58.81 | **32.44** | **60.60** |
+| Large-v3 | 34.21 | 54.53 | 34.47 | 55.82 | 34.12 | 55.52 | **33.95** | **56.02** |
