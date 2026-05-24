@@ -1,10 +1,3 @@
-
-# WhisperX-LLM-TermFixer
-A lightweight post-decoding framework to improve specific term recognition in Whisper-based system without fine-tuning or modifying the acoustic model or ASR like Whisper. This approach extends [WhisperX](https://github.com/m-bain/whisperX) framework with N-best decoding, lexicon-guided phonetic correction, and contextual re-scoring using a Large Language Model (LLM).
-
-## Abstract
-Large-scale ASR models such as Whisper perform well in general domains but struggle with specialized terminology, particularly in sensitive domains like medicine. We propose \textit{WhisperX-LLM-TermFixer}, a lightweight post-decoding framework that improves term recognition without retraining or modifying the acoustic model. The method combines $N$-best decoding, phonetic n-gram correction, and LLM-based contextual filtering. We evaluate our approach on a multilingual synthetic dataset covering English, Spanish, Catalan, and Basque, using the same set of medical terms across languages. 
-
 ## Method Overview
 
 Given an audio segment:
