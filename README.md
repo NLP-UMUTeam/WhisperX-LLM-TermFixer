@@ -25,7 +25,7 @@ conda activate whisperx
 ### 2. Install the library
 
 ```bash
-git clone https://github.com/NLP-UMUTeam/WhisperX-LLM-TermFixer.git
+git clone XXXXXX/WhisperX-LLM-TermFixer.git
 pip install -r requirements.txt
 ```
 
